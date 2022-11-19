@@ -22,25 +22,11 @@ public class App {
                 System.out.println("Player 2s ships:");
             }
             currentPlayerBoard.printBoard(false);
-            String input;
-            char x;
-            int y;
+            int[] input;
             do {
-                //input turn
-                System.out.println("Input your move:");
-                input = scanner.next();
-                x = input.charAt(0);
-                System.out.println(x);
-                if (65 <= x && x <= 90) {
-                    x -= 65;
-                }
-                else {
-                    x -= 97;
-                }
-                y = input.charAt(1)-48;
-                System.out.println(y);
+                input = getInput(scanner);
             }
-            while (!currentPlayerBoard.makeTurn(y, x));
+            while (!currentPlayerBoard.makeTurn(input[1], input[0]));
             if (currentPlayerBoard.checkWin()) {
                 gameOver = true;
                 System.out.println("You won!");
@@ -60,5 +46,23 @@ public class App {
         }
 
         scanner.close();
+    }
+
+    private static int[] getInput(Scanner scanner) {
+        //input turn
+        System.out.println("Input your move:");
+        String input = scanner.next();
+        char x = input.charAt(0);
+        x = Character.toUpperCase(x);
+        x -= 65;
+        int y = input.charAt(1) - 48;
+
+        //validate
+        int output[] = {x, y};
+        if (x < 0 || y < 0 || x > 9 || y > 9) {
+            System.out.println("Invalid move. Try again.");
+            output = getInput(scanner);
+        }
+        return output;
     }
 }
